@@ -1,0 +1,168 @@
+/* ─── CVSS Calculator Modal ─────────────────────────────────────────────── */
+
+.cvss-modal-wide {
+  width: 900px !important;
+  max-width: 95vw !important;
+}
+
+.cvss-modal {
+  padding: 8px 4px;
+}
+
+.cvss-modal h2 {
+  margin-bottom: 16px;
+  font-size: 1.3em;
+  text-align: center;
+  color: var(--text-accent);
+}
+
+.cvss-modal h3 {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin: 0 0 8px 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+  padding-bottom: 4px;
+}
+
+.cvss-section {
+  margin-bottom: 16px;
+}
+
+.cvss-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cvss-metric {
+  flex: 1 1 120px;
+  min-width: 110px;
+}
+
+.cvss-metric-label {
+  font-size: 0.78em;
+  font-weight: 600;
+  color: var(--text-normal);
+  margin-bottom: 6px;
+}
+
+.cvss-btn-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.cvss-opt-btn {
+  padding: 5px 8px;
+  border-radius: 5px;
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  cursor: pointer;
+  font-size: 0.82em;
+  text-align: left;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.cvss-opt-btn:hover {
+  background: var(--background-modifier-hover);
+  border-color: var(--text-accent);
+}
+
+.cvss-opt-btn.cvss-selected {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+  border-color: var(--interactive-accent);
+  font-weight: 600;
+}
+
+/* ─── Score display ─────────────────────────────────────────────────────── */
+
+.cvss-score-section {
+  margin-top: 20px;
+  padding: 14px;
+  border-radius: 8px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  text-align: center;
+}
+
+.cvss-score-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.cvss-score-number {
+  font-size: 2.6em;
+  font-weight: 700;
+  color: var(--text-normal);
+  line-height: 1;
+}
+
+.cvss-severity-label {
+  font-size: 1.1em;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 20px;
+  background: var(--background-modifier-border);
+}
+
+.cvss-sev-none     { background: #6b7280; color: #fff; }
+.cvss-sev-low      { background: #22c55e; color: #fff; }
+.cvss-sev-medium   { background: #f59e0b; color: #fff; }
+.cvss-sev-high     { background: #f97316; color: #fff; }
+.cvss-sev-critical { background: #ef4444; color: #fff; }
+
+.cvss-vector-string {
+  font-family: var(--font-monospace);
+  font-size: 0.72em;
+  color: var(--text-muted);
+  word-break: break-all;
+  min-height: 1.2em;
+}
+
+/* ─── Action buttons ────────────────────────────────────────────────────── */
+
+.cvss-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.cvss-action-btn {
+  padding: 6px 16px;
+  border-radius: 5px;
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background 0.12s;
+}
+
+.cvss-action-btn:hover {
+  background: var(--background-modifier-hover);
+}
+
+.cvss-action-btn.cvss-primary {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+  border-color: var(--interactive-accent);
+  font-weight: 600;
+}
+
+.cvss-action-btn.cvss-primary:hover {
+  background: var(--interactive-accent-hover);
+}
+
+.cvss-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

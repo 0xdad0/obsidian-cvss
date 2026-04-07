@@ -156,7 +156,7 @@ class CvssModal extends Modal {
     contentEl.addClass("cvss-modal");
     this.modalEl.addClass("cvss-modal-wide");
 
-    contentEl.createEl("h2", { text: "CVSS 3.1 calculator" });
+    contentEl.createEl("h2", { text: "CVSS 3.1 Calculator" });
 
     // Metric groups
     const groups = [
@@ -257,7 +257,7 @@ class CvssModal extends Modal {
 
 export default class CvssPlugin extends Plugin {
   onload() {
-    this.addRibbonIcon("shield", "Open CVSS 3.1 calculator", () => {
+    this.addRibbonIcon("shield", "Open CVSS 3.1 Calculator", () => {
       new CvssModal(this.app).open();
     });
 

@@ -156,7 +156,7 @@ class CvssModal extends Modal {
     contentEl.addClass("cvss-modal");
     this.modalEl.addClass("cvss-modal-wide");
 
-    contentEl.createEl("h2", { text: "CVSS 3.1 Calculator" });
+    contentEl.createEl("h2", { text: "CVSS 3.1 calculator" });
 
     // Metric groups
     const groups = [
@@ -201,7 +201,7 @@ class CvssModal extends Modal {
     // Action buttons
     const actions = contentEl.createDiv("cvss-actions");
 
-    const copyBtn = actions.createEl("button", { text: "Copy Vector", cls: "cvss-action-btn" });
+    const copyBtn = actions.createEl("button", { text: "Copy vector", cls: "cvss-action-btn" });
     copyBtn.addEventListener("click", () => {
       const vec = this.vectorEl.getText();
       if (vec) {
@@ -239,7 +239,7 @@ class CvssModal extends Modal {
 
     const view = this.app.workspace.getActiveViewOfType(MarkdownView);
     if (!view) {
-      new Notice("No active markdown note.");
+      new Notice("No active markdown note");
       return;
     }
 
@@ -254,17 +254,16 @@ class CvssModal extends Modal {
   }
 }
 
-// ─── Plugin entry point ──────────────────────────────────────────────────────
 
 export default class CvssPlugin extends Plugin {
   onload() {
-    this.addRibbonIcon("shield", "Open CVSS 3.1 Calculator", () => {
+    this.addRibbonIcon("shield", "Open CVSS 3.1 calculator", () => {
       new CvssModal(this.app).open();
     });
 
     this.addCommand({
-      id: "cvss-calculator",
-      name: "CVSS 3.1 Calculator",
+      id: "cvss",
+      name: "CVSS Calculator",
       callback: () => new CvssModal(this.app).open(),
     });
   }

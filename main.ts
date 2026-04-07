@@ -205,7 +205,7 @@ class CvssModal extends Modal {
     copyBtn.addEventListener("click", () => {
       const vec = this.vectorEl.getText();
       if (vec) {
-        navigator.clipboard.writeText(vec);
+        void navigator.clipboard.writeText(vec);
         new Notice("Vector copied to clipboard");
       }
     });
@@ -239,7 +239,7 @@ class CvssModal extends Modal {
 
     const view = this.app.workspace.getActiveViewOfType(MarkdownView);
     if (!view) {
-      new Notice("No active markdown note");
+      new Notice("No active markdown note.");
       return;
     }
 
@@ -257,14 +257,14 @@ class CvssModal extends Modal {
 // ─── Plugin entry point ──────────────────────────────────────────────────────
 
 export default class CvssPlugin extends Plugin {
-  async onload() {
+  onload() {
     this.addRibbonIcon("shield", "Open CVSS 3.1 Calculator", () => {
       new CvssModal(this.app).open();
     });
 
     this.addCommand({
-      id: "open-cvss-calculator",
-      name: "Open CVSS 3.1 Calculator",
+      id: "cvss-calculator",
+      name: "CVSS 3.1 Calculator",
       callback: () => new CvssModal(this.app).open(),
     });
   }

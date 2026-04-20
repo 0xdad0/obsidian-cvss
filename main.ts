@@ -1,4 +1,4 @@
-import { App, Modal, Plugin, MarkdownView, Notice } from "obsidian";
+import { App, Modal, Plugin, MarkdownView, Notice, SuggestModal, TFile } from "obsidian";
 
 // ─── CVSS 3.1 metric definitions ────────────────────────────────────────────
 
@@ -137,6 +137,38 @@ function computeScore(sel: Selection): { score: number; vector: string; severity
   return { score, vector, severity };
 }
 
+// ─── Findings suggest modal ──────────────────────────────────────────────────
+
+class FindingsSuggestModal extends SuggestModal<TFile> {
+  constructor(app: App) {
+    super(app);
+    this.setPlaceholder("Select an open finding to update CVSS…");
+  }
+
+  getSuggestions(query: string): TFile[] {
+    const q = query.toLowerCase();
+    return this.app.vault.getMarkdownFiles().filter(file => {
+      const fm = this.app.metadataCache.getFileCache(file)?.frontmatter;
+      if (!fm) return false;
+      const OPEN_VALUES = ["aperto", "open", "draft"];
+      const raw = fm["stato"] ?? fm["status"];
+      const vals = (Array.isArray(raw) ? raw : [raw]).map((v: unknown) => String(v).toLowerCase());
+      const isOpen = vals.some(v => OPEN_VALUES.includes(v));
+      if (!isOpen) return false;
+      return !q || file.basename.toLowerCase().includes(q);
+    });
+  }
+
+  renderSuggestion(file: TFile, el: HTMLElement): void {
+    el.createEl("div", { text: file.basename, cls: "suggestion-title" });
+    el.createEl("small", { text: file.path, cls: "suggestion-note" });
+  }
+
+  onChooseSuggestion(file: TFile): void {
+    new CvssModal(this.app, file).open();
+  }
+}
+
 // ─── Modal ───────────────────────────────────────────────────────────────────
 
 class CvssModal extends Modal {
@@ -145,9 +177,11 @@ class CvssModal extends Modal {
   private vectorEl!: HTMLElement;
   private severityEl!: HTMLElement;
   private insertBtn!: HTMLButtonElement;
+  private targetFile?: TFile;
 
-  constructor(app: App) {
+  constructor(app: App, targetFile?: TFile) {
     super(app);
+    this.targetFile = targetFile;
   }
 
   onOpen() {
@@ -210,9 +244,22 @@ class CvssModal extends Modal {
       }
     });
 
-    this.insertBtn = actions.createEl("button", { text: "Insert into note", cls: "cvss-action-btn cvss-primary" });
+    this.insertBtn = actions.createEl("button", {
+      text: this.targetFile ? "Update CVSS" : "Insert into note",
+      cls: "cvss-action-btn cvss-primary",
+    });
     this.insertBtn.disabled = true;
-    this.insertBtn.addEventListener("click", () => this.insertIntoNote());
+    this.insertBtn.addEventListener("click", () => {
+      if (this.targetFile) void this.updateFrontmatter();
+      else this.insertIntoNote();
+    });
+
+    // Pre-populate from existing cvss_vector if editing a finding
+    if (this.targetFile) {
+      const fm = this.app.metadataCache.getFileCache(this.targetFile)?.frontmatter;
+      const existing = fm?.["cvss_vector"] as string | undefined;
+      if (existing) this.prePopulateFromVector(existing, contentEl);
+    }
   }
 
   private updateScore() {
@@ -249,6 +296,40 @@ class CvssModal extends Modal {
     this.close();
   }
 
+  private async updateFrontmatter() {
+    const result = computeScore(this.selection as Selection);
+    if (!result || !this.targetFile) return;
+
+    const severity = result.severity.toUpperCase();
+    const score    = result.score.toFixed(1);
+    const link     = `https://www.first.org/cvss/calculator/3.1#${result.vector}`;
+
+    await this.app.fileManager.processFrontMatter(this.targetFile, (fm) => {
+      fm["cvss_vector"]   = result.vector;
+      fm["cvss_link"]     = link;
+      fm["cvss_score"]    = score;
+      fm["cvss_severity"] = severity;
+    });
+
+    new Notice(`CVSS updated for ${this.targetFile.basename}`);
+    this.close();
+  }
+
+  private prePopulateFromVector(vector: string, contentEl: HTMLElement) {
+    const parts = vector.replace("CVSS:3.1/", "").split("/");
+    for (const part of parts) {
+      const [key, value] = part.split(":");
+      if (!key || !value) continue;
+      (this.selection as Record<string, string>)[key] = value;
+      const btn = contentEl.querySelector(`[data-metric="${key}"][data-value="${value}"]`) as HTMLElement | null;
+      if (btn) {
+        btn.parentElement?.querySelectorAll(".cvss-opt-btn").forEach(b => b.removeClass("cvss-selected"));
+        btn.addClass("cvss-selected");
+      }
+    }
+    this.updateScore();
+  }
+
   onClose() {
     this.contentEl.empty();
   }
@@ -265,6 +346,22 @@ export default class CvssPlugin extends Plugin {
       id: "cvss",
       name: "CVSS Calculator",
       callback: () => new CvssModal(this.app).open(),
+    });
+
+    this.addCommand({
+      id: "cvss-update-finding",
+      name: "Change CVSS of open finding",
+      callback: () => new FindingsSuggestModal(this.app).open(),
+    });
+
+    this.addCommand({
+      id: "cvss-update-current",
+      name: "Change CVSS of current note",
+      callback: () => {
+        const file = this.app.workspace.getActiveFile();
+        if (!file) { new Notice("No active note"); return; }
+        new CvssModal(this.app, file).open();
+      },
     });
   }
 }

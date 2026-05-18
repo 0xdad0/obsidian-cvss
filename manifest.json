@@ -1,8 +1,8 @@
 {
   "id": "cvss-calculator",
   "name": "CVSS 3.1 Calculator",
-  "version": "1.0.3",
-  "minAppVersion": "0.15.0",
+  "version": "1.0.4",
+  "minAppVersion": "1.4.4",
   "description": "Compute CVSS 3.1 scores with an interactive popup selector.",
   "author": "davide.caputo",
   "authorUrl": "",

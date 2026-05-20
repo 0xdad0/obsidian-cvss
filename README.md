@@ -8,7 +8,7 @@ An Obsidian plugin that opens a single popup to compute [CVSS 3.1](https://www.f
 
 - Single wide modal — all 8 Base Score metrics visible without scrolling
 - Live score computation as you click options
-- Color-coded severity badge (None / Low / Medium / High / Critical)
+- Color-coded severity badge (Info / Low / Medium / High / Critical)
 - Displays the full CVSS vector string (e.g. `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H`)
 - **Copy Vector** — copies the vector string to the clipboard
 - **Insert into note** — inserts the score and vector at the cursor in the active markdown note
@@ -39,7 +39,7 @@ An Obsidian plugin that opens a single popup to compute [CVSS 3.1](https://www.f
 
 | Score range | Rating |
 |---|---|
-| 0.0 | None |
+| 0.0 | Info |
 | 0.1 – 3.9 | Low |
 | 4.0 – 6.9 | Medium |
 | 7.0 – 8.9 | High |
@@ -165,7 +165,7 @@ Base Score = Roundup(Min[Impact + Exploitability, 10])           (Scope Unchange
 | `cvss_severity` | `CRITICAL` |
 | `cvss_link` | `https://www.first.org/cvss/calculator/3.1#CVSS:3.1/…` |
 
-> `cvss_severity` is always written in uppercase (`NONE`, `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`).
+> `cvss_severity` is always written in uppercase (`INFO`, `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`).
 
 ### Update CVSS of the current note
 

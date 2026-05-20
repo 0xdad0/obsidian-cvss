@@ -128,7 +128,7 @@ function computeScore(sel: Selection): { score: number; vector: string; severity
   }
 
   const vector = `CVSS:3.1/AV:${sel.AV}/AC:${sel.AC}/PR:${sel.PR}/UI:${sel.UI}/S:${sel.S}/C:${sel.C}/I:${sel.I}/A:${sel.A}`;
-  const severity = score === 0 ? "None"
+  const severity = score === 0 ? "Info"
     : score < 4  ? "Low"
     : score < 7  ? "Medium"
     : score < 9  ? "High"

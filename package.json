@@ -1,7 +1,7 @@
 {
   "name": "cvss-calculator",
   "version": "1.0.0",
-  "description": "Obsidian CVSS 3.1 Calculator Plugin",
+  "description": "Obsidian CVSS 4.0 Calculator Plugin",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
